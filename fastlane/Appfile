@@ -1,0 +1,4 @@
+app_identifier("com.app.fastlanesetup.app.FastlaneSetup")
+apple_id("henrybella122@gmail.com")
+team_id("D6U448N2VV")
+itc_team_id("") # App Store Connect team ID (multiple teams hain toh)
