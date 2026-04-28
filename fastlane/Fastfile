@@ -5,6 +5,7 @@ platform :ios do
   desc "Build, archive and upload to TestFlight"
   lane :upload do
     app_id = ENV["APP_IDENTIFIER"].to_s.strip
+    team = ENV["TEAM_ID"].to_s.strip
 
     api_key = app_store_connect_api_key(
       key_id: ENV["APP_STORE_KEY_ID"].to_s.strip,
@@ -14,21 +15,21 @@ platform :ios do
       is_key_content_base64: true
     )
 
-    # Fresh App Store provisioning profile download karo
+    # Fresh provisioning profile download karo
     get_provisioning_profile(
       api_key: api_key,
       app_identifier: app_id,
       force: true
     )
 
-    # Project ko manual signing pe switch karo correct profile k sath
+    # Manual signing set karo with downloaded profile
     update_code_signing_settings(
       use_automatic_signing: false,
       path: "FastlaneSetup.xcodeproj",
-      team_id: ENV["TEAM_ID"].to_s.strip,
+      team_id: team,
       bundle_identifier: app_id,
       code_sign_identity: "Apple Distribution",
-      profile_name: ENV["SIGH_PROFILE_NAME"]
+      profile_name: ENV["SIGH_NAME"]
     )
 
     gym(
@@ -36,6 +37,11 @@ platform :ios do
       scheme: "FastlaneSetup",
       configuration: "Release",
       export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          app_id => ENV["SIGH_NAME"]
+        }
+      },
       output_directory: "./build",
       output_name: "FastlaneSetup.ipa",
       clean: true
@@ -51,6 +57,7 @@ platform :ios do
   desc "Build, archive and submit to App Store for review"
   lane :release do
     app_id = ENV["APP_IDENTIFIER"].to_s.strip
+    team = ENV["TEAM_ID"].to_s.strip
 
     api_key = app_store_connect_api_key(
       key_id: ENV["APP_STORE_KEY_ID"].to_s.strip,
@@ -60,21 +67,21 @@ platform :ios do
       is_key_content_base64: true
     )
 
-    # Fresh App Store provisioning profile download karo
+    # Fresh provisioning profile download karo
     get_provisioning_profile(
       api_key: api_key,
       app_identifier: app_id,
       force: true
     )
 
-    # Project ko manual signing pe switch karo correct profile k sath
+    # Manual signing set karo with downloaded profile
     update_code_signing_settings(
       use_automatic_signing: false,
       path: "FastlaneSetup.xcodeproj",
-      team_id: ENV["TEAM_ID"].to_s.strip,
+      team_id: team,
       bundle_identifier: app_id,
       code_sign_identity: "Apple Distribution",
-      profile_name: ENV["SIGH_PROFILE_NAME"]
+      profile_name: ENV["SIGH_NAME"]
     )
 
     gym(
@@ -82,6 +89,11 @@ platform :ios do
       scheme: "FastlaneSetup",
       configuration: "Release",
       export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          app_id => ENV["SIGH_NAME"]
+        }
+      },
       output_directory: "./build",
       output_name: "FastlaneSetup.ipa",
       clean: true
