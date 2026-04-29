@@ -21,7 +21,15 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 [bundle exec] fastlane ios upload
 ```
 
-Build, archive aur TestFlight pe upload karo - single command
+Build, archive and upload to TestFlight
+
+### ios release
+
+```sh
+[bundle exec] fastlane ios release
+```
+
+Build, archive and submit to App Store for review
 
 ----
 
